@@ -265,7 +265,7 @@ func (di *DiscordInstall) launch() error {
 		executablePath = path.Join(executableFolder, "Discord")
 	}
 
-	Log.Info("Launchig Discord from path: " + executablePath + "...")
+	Log.Info("Launching Discord from path: " + executablePath + "...")
 	cmd := exec.Command(executablePath)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
