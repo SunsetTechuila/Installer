@@ -52,6 +52,7 @@ func main() {
 	var uninstallFlag = flag.Bool("uninstall", false, "Uninstall Vencord")
 	var installOpenAsarFlag = flag.Bool("install-openasar", false, "Install OpenAsar")
 	var uninstallOpenAsarFlag = flag.Bool("uninstall-openasar", false, "Uninstall OpenAsar")
+	var launchDiscordFlag = flag.Bool("launch-discord", false, "Launch Discord")
 	var locationFlag = flag.String("location", "", "The location of the Discord install to modify")
 	var branchFlag = flag.String("branch", "", "The branch of Discord to modify [auto|stable|ptb|canary]")
 	flag.Parse()
@@ -93,8 +94,8 @@ func main() {
 		}
 	}
 
-	install, uninstall, update, installOpenAsar, uninstallOpenAsar := *installFlag, *uninstallFlag, *updateFlag, *installOpenAsarFlag, *uninstallOpenAsarFlag
-	switches := []*bool{&install, &update, &uninstall, &installOpenAsar, &uninstallOpenAsar}
+	install, uninstall, update, installOpenAsar, uninstallOpenAsar, launchDiscord := *installFlag, *uninstallFlag, *updateFlag, *installOpenAsarFlag, *uninstallOpenAsarFlag, *launchDiscordFlag
+	switches := []*bool{&install, &update, &uninstall, &installOpenAsar, &uninstallOpenAsar, &launchDiscord}
 	if !SliceContainsFunc(switches, func(b *bool) bool { return *b }) {
 		interactive = true
 
@@ -112,6 +113,7 @@ func main() {
 			"Uninstall Vencord",
 			"Install OpenAsar",
 			"Uninstall OpenAsar",
+			"Launch Discord",
 			"View Help Menu",
 			"Update Vencord Installer",
 			"Quit",
@@ -166,6 +168,8 @@ func main() {
 		} else {
 			die("OpenAsar not installed")
 		}
+	} else if launchDiscord {
+		errSilent = PromptDiscord("launch", *locationFlag, *branchFlag).launch()
 	}
 
 	if err != nil {

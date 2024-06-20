@@ -12,6 +12,7 @@ import (
 	"os"
 	"os/exec"
 	path "path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -252,3 +253,28 @@ func (di *DiscordInstall) unpatch() error {
 }
 
 //endregion
+
+// region Launch
+
+func (di *DiscordInstall) launch() error {
+	var executableFolder = path.Join(di.appPath, "../..")
+	var executablePath string
+	if runtime.GOOS == "windows" {
+		executablePath = path.Join(executableFolder, "Discord.exe")
+	} else {
+		executablePath = path.Join(executableFolder, "Discord")
+	}
+
+	Log.Info("Launchig Discord from path: " + executablePath + "...")
+	cmd := exec.Command(executablePath)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	var err = cmd.Start()
+	if err != nil {
+		return errors.New("Failed to launch Discord: " + err.Error())
+	}
+
+	return nil
+}
+
+// endregion

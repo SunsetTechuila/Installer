@@ -167,6 +167,13 @@ func handleOpenAsarConfirmed() {
 	}
 }
 
+func handleLaunchDiscord() {
+	choice := getChosenInstall()
+	if choice != nil {
+		choice.launch()
+	}
+}
+
 func handleErr(di *DiscordInstall, err error, action string) {
 	if errors.Is(err, os.ErrPermission) {
 		switch runtime.GOOS {
@@ -204,6 +211,12 @@ func (di *DiscordInstall) Unpatch() {
 		handleErr(di, err, "unpatch")
 	} else {
 		g.OpenPopup("#unpatched")
+	}
+}
+
+func (di *DiscordInstall) Launch() {
+	if err := di.launch(); err != nil {
+		handleErr(di, err, "launch")
 	}
 }
 
@@ -569,6 +582,21 @@ func renderInstaller() g.Widget {
 							Size((w-40)/4, 50),
 						Tooltip("Manage OpenAsar"),
 					),
+			),
+
+			g.Dummy(0, 5),
+
+			g.Row(
+				g.Dummy((w-40)/3, 0),
+				g.Style().
+					SetColor(g.StyleColorButton, DiscordBlue).
+					To(
+						g.Button("Launch Discord").
+							OnClick(handleLaunchDiscord).
+							Size((w-40)/3, 50),
+						Tooltip("Launch the selected Discord Install"),
+					),
+				g.Dummy((w-40)/3, 0),
 			),
 		),
 
