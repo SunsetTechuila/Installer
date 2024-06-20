@@ -170,7 +170,7 @@ func handleOpenAsarConfirmed() {
 func handleLaunchDiscord() {
 	choice := getChosenInstall()
 	if choice != nil {
-		choice.launch()
+		choice.Launch()
 	}
 }
 
